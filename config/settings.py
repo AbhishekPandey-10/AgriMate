@@ -144,8 +144,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # PWA Settings
-PWA_APP_NAME = 'Agri-Ledger'
-PWA_APP_DESCRIPTION = "Agri-Ledger Farming App"
+PWA_APP_NAME = 'AgriMate'
+PWA_APP_DESCRIPTION = "AgriMate — Smart Farming Companion"
 PWA_APP_THEME_COLOR = '#198754'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'

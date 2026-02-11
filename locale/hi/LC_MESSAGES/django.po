@@ -45,6 +45,9 @@ msgstr "स्थिति"
 msgid "Active"
 msgstr "सक्रिय"
 
+msgid "Inactive"
+msgstr "निष्क्रिय"
+
 # Quick Action Cards
 msgid "New Crop"
 msgstr "नई फसल"

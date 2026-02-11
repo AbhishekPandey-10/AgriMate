@@ -108,3 +108,10 @@ class SchemeRecommendation(models.Model):
     
     def __str__(self):
         return f"{self.scheme_name} - {self.farmer.farmer_code}"
+
+    @property
+    def is_recent(self):
+        """Returns True if scheme was added in the last 7 days."""
+        from django.utils import timezone
+        import datetime
+        return self.created_at >= timezone.now() - datetime.timedelta(days=7)

@@ -45,6 +45,9 @@ msgstr "ਸਥਿਤੀ"
 msgid "Active"
 msgstr "ਸਰਗਰਮ"
 
+msgid "Inactive"
+msgstr "ਅਸਰਗਰਮ"
+
 # Quick Action Cards
 msgid "New Crop"
 msgstr "ਨਵੀਂ ਫ਼ਸਲ"
