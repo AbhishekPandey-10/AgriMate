@@ -1,12 +1,13 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-8">
+<div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-100 px-6 py-4">
             <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <i data-lucide="sprout" class="h-6 w-6 text-green-600"></i>
-                {{ title }}
+                {% trans "Start New Crop" %}
             </h2>
         </div>
 
@@ -18,15 +19,186 @@
                 <div class="flex gap-3 mt-6">
                     <button type="submit"
                         class="flex-1 inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
-                        <i data-lucide="save" class="h-4 w-4"></i> Start Crop
+                        <i data-lucide="save" class="h-4 w-4"></i> {% trans "Start Crop" %}
                     </button>
                     <a href="{% url 'dashboard' %}"
                         class="inline-flex items-center justify-center gap-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
-                        Cancel
+                        {% trans "Cancel" %}
                     </a>
                 </div>
             </form>
         </div>
     </div>
+
+    <!-- Profitability Forecaster Widget -->
+    <div id="forecast-widget" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hidden">
+        <div class="bg-gradient-to-r from-purple-50 to-fuchsia-50 border-b border-gray-100 px-6 py-4">
+            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <i data-lucide="bar-chart-3" class="h-5 w-5 text-purple-600"></i>
+                {% trans "Profitability Forecast" %}
+            </h3>
+            <p id="forecast-source" class="text-xs text-gray-400 mt-1"></p>
+        </div>
+
+        <div class="p-6">
+            <div id="forecast-loading" class="text-center py-6 hidden">
+                <div
+                    class="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-3">
+                </div>
+                <p class="text-gray-400 text-sm">{% trans "Calculating forecast..." %}</p>
+            </div>
+
+            <div id="forecast-empty" class="text-center py-6 hidden">
+                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="help-circle" class="h-6 w-6 text-gray-400"></i>
+                </div>
+                <p class="text-gray-500 font-semibold">{% trans "No forecast data available" %}</p>
+                <p class="text-sm text-gray-400 mt-1">{% trans "We don't have historical or estimated data for this
+                    crop." %}</p>
+            </div>
+
+            <div id="forecast-results" class="space-y-4 hidden">
+                <div class="text-center">
+                    <div id="roi-badge"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-bold">
+                        <i data-lucide="trending-up" class="h-5 w-5"></i>
+                        <span id="roi-value">0</span>% {% trans "ROI" %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-red-50 rounded-lg p-3 text-center border border-red-100">
+                        <p class="text-[10px] text-red-500 uppercase font-bold tracking-wider">{% trans "Est. Expense"
+                            %}</p>
+                        <p id="est-expense" class="font-mono text-lg font-bold text-red-700 mt-1">₹0</p>
+                        <p id="exp-per-acre" class="text-[10px] text-red-400 mt-0.5">₹0/{% trans "acre" %}</p>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-3 text-center border border-green-100">
+                        <p class="text-[10px] text-green-500 uppercase font-bold tracking-wider">{% trans "Est. Income"
+                            %}</p>
+                        <p id="est-income" class="font-mono text-lg font-bold text-green-700 mt-1">₹0</p>
+                        <p id="inc-per-acre" class="text-[10px] text-green-400 mt-0.5">₹0/{% trans "acre" %}</p>
+                    </div>
+                    <div id="profit-card" class="rounded-lg p-3 text-center border">
+                        <p class="text-[10px] uppercase font-bold tracking-wider" id="profit-label">{% trans "Est.
+                            Profit" %}</p>
+                        <p id="est-profit" class="font-mono text-lg font-bold mt-1">₹0</p>
+                        <p id="profit-per-acre" class="text-[10px] mt-0.5">₹0/{% trans "acre" %}</p>
+                    </div>
+                </div>
+
+                <div id="forecast-note" class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                    <p class="text-sm text-purple-800 flex items-center gap-2">
+                        <i data-lucide="info" class="h-4 w-4 flex-shrink-0"></i>
+                        <span id="forecast-note-text">{% trans "Based on estimated data." %}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cropInput = document.getElementById('id_crop_name');
+        const areaInput = document.getElementById('id_area_used');
+        const widget = document.getElementById('forecast-widget');
+        const loading = document.getElementById('forecast-loading');
+        const empty = document.getElementById('forecast-empty');
+        const results = document.getElementById('forecast-results');
+
+        let debounceTimer = null;
+
+        function fetchForecast() {
+            const crop = cropInput ? cropInput.value.trim() : '';
+            const area = areaInput ? areaInput.value.trim() : '1';
+
+            if (!crop || crop.length < 2) {
+                widget.classList.add('hidden');
+                return;
+            }
+
+            widget.classList.remove('hidden');
+            loading.classList.remove('hidden');
+            empty.classList.add('hidden');
+            results.classList.add('hidden');
+
+            fetch(`{% url 'api_crop_forecast' %}?crop=${encodeURIComponent(crop)}&area=${encodeURIComponent(area || '1')}`)
+                .then(res => res.json())
+                .then(data => {
+                    loading.classList.add('hidden');
+
+                    if (!data.found) {
+                        empty.classList.remove('hidden');
+                        return;
+                    }
+
+                    results.classList.remove('hidden');
+
+                    const roiBadge = document.getElementById('roi-badge');
+                    const roiVal = data.roi_percentage;
+                    document.getElementById('roi-value').textContent = roiVal;
+
+                    if (roiVal >= 50) {
+                        roiBadge.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-bold bg-green-100 text-green-800';
+                    } else if (roiVal >= 0) {
+                        roiBadge.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-bold bg-yellow-100 text-yellow-800';
+                    } else {
+                        roiBadge.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-bold bg-red-100 text-red-800';
+                    }
+
+                    document.getElementById('est-expense').textContent = '₹' + data.estimated_expense.toLocaleString('en-IN');
+                    document.getElementById('est-income').textContent = '₹' + data.estimated_income.toLocaleString('en-IN');
+                    document.getElementById('est-profit').textContent = '₹' + Math.abs(data.estimated_profit).toLocaleString('en-IN');
+                    document.getElementById('exp-per-acre').textContent = '₹' + data.avg_expense_per_acre.toLocaleString('en-IN') + '/acre';
+                    document.getElementById('inc-per-acre').textContent = '₹' + data.avg_income_per_acre.toLocaleString('en-IN') + '/acre';
+                    document.getElementById('profit-per-acre').textContent = '₹' + Math.abs(data.avg_profit_per_acre).toLocaleString('en-IN') + '/acre';
+
+                    const profitCard = document.getElementById('profit-card');
+                    const profitLabel = document.getElementById('profit-label');
+                    if (data.estimated_profit >= 0) {
+                        profitCard.className = 'bg-emerald-50 rounded-lg p-3 text-center border border-emerald-100';
+                        profitLabel.className = 'text-[10px] uppercase font-bold tracking-wider text-emerald-500';
+                        profitLabel.textContent = 'Est. Profit';
+                        document.getElementById('est-profit').className = 'font-mono text-lg font-bold mt-1 text-emerald-700';
+                        document.getElementById('profit-per-acre').className = 'text-[10px] mt-0.5 text-emerald-400';
+                    } else {
+                        profitCard.className = 'bg-red-50 rounded-lg p-3 text-center border border-red-100';
+                        profitLabel.className = 'text-[10px] uppercase font-bold tracking-wider text-red-500';
+                        profitLabel.textContent = 'Est. Loss';
+                        document.getElementById('est-profit').className = 'font-mono text-lg font-bold mt-1 text-red-700';
+                        document.getElementById('profit-per-acre').className = 'text-[10px] mt-0.5 text-red-400';
+                    }
+
+                    const noteText = document.getElementById('forecast-note-text');
+                    const sourceText = document.getElementById('forecast-source');
+                    if (data.data_source === 'historical') {
+                        noteText.textContent = `Based on ${data.cycle_count} past harvest(s) from your platform's data.`;
+                        sourceText.textContent = '📊 Source: Platform Historical Data (' + data.cycle_count + ' cycles)';
+                    } else {
+                        noteText.textContent = 'Based on average Indian agricultural estimates. Actual results may vary.';
+                        sourceText.textContent = '📊 Source: Estimated National Averages';
+                    }
+                })
+                .catch(err => {
+                    loading.classList.add('hidden');
+                    empty.classList.remove('hidden');
+                    console.error('Forecast error:', err);
+                });
+        }
+
+        if (cropInput) {
+            cropInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(fetchForecast, 600);
+            });
+        }
+        if (areaInput) {
+            areaInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(fetchForecast, 600);
+            });
+        }
+    });
+</script>
 {% endblock %}

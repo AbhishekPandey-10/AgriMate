@@ -1,0 +1,11 @@
+Django==5.2.5
+mysqlclient==2.2.7
+google-generativeai==0.8.5
+xhtml2pdf==0.2.17
+django-pwa==2.0.1
+requests==2.32.4
+pillow==11.3.0
+python-dotenv==1.1.1
+gunicorn==23.0.0
+whitenoise==6.11.0
+typing_extensions==4.14.1

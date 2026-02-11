@@ -1,0 +1,211 @@
+# Hindi translations for Agri-Ledger
+# Copyright (C) 2026 Agri-Ledger
+# This file is distributed under the same license as the Agri-Ledger package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Agri-Ledger 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-11 11:00+0530\n"
+"PO-Revision-Date: 2026-02-11 11:00+0530\n"
+"Last-Translator: Agri-Ledger Team\n"
+"Language-Team: Hindi\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Navigation
+msgid "Logout"
+msgstr "लॉग आउट"
+
+# Profile Card
+msgid "Farmer Profile"
+msgstr "किसान प्रोफ़ाइल"
+
+msgid "ID"
+msgstr "आईडी"
+
+msgid "Free Land"
+msgstr "खाली ज़मीन"
+
+msgid "Acres"
+msgstr "एकड़"
+
+msgid "acres"
+msgstr "एकड़"
+
+msgid "acre"
+msgstr "एकड़"
+
+msgid "Status"
+msgstr "स्थिति"
+
+msgid "Active"
+msgstr "सक्रिय"
+
+# Quick Action Cards
+msgid "New Crop"
+msgstr "नई फसल"
+
+msgid "Start Season"
+msgstr "मौसम शुरू करें"
+
+msgid "Expense"
+msgstr "खर्च"
+
+msgid "Log Cost"
+msgstr "खर्च दर्ज करें"
+
+msgid "Harvest"
+msgstr "कटाई"
+
+msgid "Sell Crop"
+msgstr "फसल बेचें"
+
+msgid "Report"
+msgstr "रिपोर्ट"
+
+msgid "For Bank"
+msgstr "बैंक के लिए"
+
+# Crop Section
+msgid "Active Crops"
+msgstr "सक्रिय फसलें"
+
+msgid "Started"
+msgstr "शुरू"
+
+msgid "Harvest & Sell"
+msgstr "कटाई और बिक्री"
+
+msgid "No active crops."
+msgstr "कोई सक्रिय फसल नहीं।"
+
+msgid "Your land is ready for a new season."
+msgstr "आपकी ज़मीन नए मौसम के लिए तैयार है।"
+
+msgid "Start a season"
+msgstr "मौसम शुरू करें"
+
+# Expenses Section
+msgid "Recent Expenses"
+msgstr "हाल के खर्चे"
+
+msgid "No expenses recorded yet."
+msgstr "अभी तक कोई खर्च दर्ज नहीं हुआ।"
+
+# Schemes Section
+msgid "Recommended Government Schemes"
+msgstr "अनुशंसित सरकारी योजनाएँ"
+
+msgid "Added"
+msgstr "जोड़ा गया"
+
+msgid "New"
+msgstr "नई"
+
+msgid "Description"
+msgstr "विवरण"
+
+msgid "Benefits"
+msgstr "लाभ"
+
+msgid "Eligibility"
+msgstr "पात्रता"
+
+msgid "Apply Now"
+msgstr "अभी आवेदन करें"
+
+msgid "Contact Local Office"
+msgstr "स्थानीय कार्यालय से संपर्क करें"
+
+msgid "No scheme recommendations yet."
+msgstr "अभी तक कोई योजना सुझाव नहीं।"
+
+msgid "Add a new crop to get AI-powered government scheme suggestions."
+msgstr "AI-संचालित सरकारी योजना सुझाव प्राप्त करने के लिए नई फसल जोड़ें।"
+
+# Crop Form
+msgid "Start New Crop"
+msgstr "नई फसल शुरू करें"
+
+msgid "Start Crop"
+msgstr "फसल शुरू करें"
+
+msgid "Cancel"
+msgstr "रद्द करें"
+
+# Profitability Forecaster
+msgid "Profitability Forecast"
+msgstr "लाभ का अनुमान"
+
+msgid "Calculating forecast..."
+msgstr "अनुमान लगाया जा रहा है..."
+
+msgid "No forecast data available"
+msgstr "कोई अनुमान डेटा उपलब्ध नहीं"
+
+msgid "We don't have historical or estimated data for this crop."
+msgstr "इस फसल के लिए हमारे पास ऐतिहासिक या अनुमानित डेटा नहीं है।"
+
+msgid "ROI"
+msgstr "ROI"
+
+msgid "Est. Expense"
+msgstr "अनु. खर्च"
+
+msgid "Est. Income"
+msgstr "अनु. आय"
+
+msgid "Est. Profit"
+msgstr "अनु. लाभ"
+
+msgid "Based on estimated data."
+msgstr "अनुमानित डेटा पर आधारित।"
+
+# Harvest Form
+msgid "Record Harvest"
+msgstr "कटाई दर्ज करें"
+
+msgid "Current Market Prices"
+msgstr "वर्तमान बाज़ार भाव"
+
+msgid "Source"
+msgstr "स्रोत"
+
+msgid "Min"
+msgstr "न्यूनतम"
+
+msgid "Best Price"
+msgstr "सर्वोत्तम मूल्य"
+
+msgid "Max"
+msgstr "अधिकतम"
+
+msgid "Prices are per Quintal. Compare with your selling price before recording the harvest."
+msgstr "मूल्य प्रति क्विंटल हैं। कटाई दर्ज करने से पहले अपने बिक्री मूल्य से तुलना करें।"
+
+msgid "No market data found for this crop."
+msgstr "इस फसल के लिए बाज़ार डेटा नहीं मिला।"
+
+msgid "Try using a common crop name (e.g. Wheat, Rice, Cotton)."
+msgstr "एक सामान्य फसल नाम आज़माएँ (जैसे गेहूँ, चावल, कपास)।"
+
+# Expense Form
+msgid "Log Expense"
+msgstr "खर्च दर्ज करें"
+
+msgid "Save Expense"
+msgstr "खर्च सहेजें"
+
+# Settings
+msgid "English"
+msgstr "अंग्रेज़ी"
+
+msgid "Hindi"
+msgstr "हिन्दी"
+
+msgid "Punjabi"
+msgstr "पंजाबी"

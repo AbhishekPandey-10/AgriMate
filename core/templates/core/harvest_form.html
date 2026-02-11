@@ -1,12 +1,13 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-8">
+<div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-b border-gray-100 px-6 py-4">
             <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <i data-lucide="coins" class="h-6 w-6 text-yellow-600"></i>
-                {{ title }}
+                {% trans "Harvest" %} — {{ cycle.crop_name }}
             </h2>
         </div>
 
@@ -18,14 +19,81 @@
                 <div class="flex gap-3 mt-6">
                     <button type="submit"
                         class="flex-1 inline-flex items-center justify-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
-                        <i data-lucide="check-circle" class="h-4 w-4"></i> Record Harvest
+                        <i data-lucide="check-circle" class="h-4 w-4"></i> {% trans "Record Harvest" %}
                     </button>
                     <a href="{% url 'dashboard' %}"
                         class="inline-flex items-center justify-center gap-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
-                        Cancel
+                        {% trans "Cancel" %}
                     </a>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Mandi Price Comparison Widget -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-50 to-sky-50 border-b border-gray-100 px-6 py-4">
+            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <i data-lucide="trending-up" class="h-5 w-5 text-blue-600"></i>
+                {% trans "Current Market Prices" %} — {{ cycle.crop_name }}
+            </h3>
+            {% if mandi_data.source %}
+            <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                <i data-lucide="database" class="h-3 w-3"></i> {% trans "Source" %}: {{ mandi_data.source }}
+            </p>
+            {% endif %}
+        </div>
+
+        <div class="p-6">
+            {% if mandi_data.found and mandi_data.prices %}
+            <div class="space-y-3">
+                {% for price in mandi_data.prices %}
+                <div
+                    class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 hover:bg-blue-50 transition-colors">
+                    <div>
+                        <p class="font-bold text-gray-900 text-sm">{{ price.market }}</p>
+                        {% if price.state %}
+                        <p class="text-xs text-gray-400">{{ price.state }}</p>
+                        {% endif %}
+                        {% if price.arrival_date %}
+                        <p class="text-xs text-gray-400">{{ price.arrival_date }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center gap-4 text-right">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">{% trans "Min" %}</p>
+                            <p class="font-mono text-sm text-red-600 font-bold">₹{{ price.min_price }}</p>
+                        </div>
+                        <div class="bg-green-100 rounded-lg px-3 py-1.5">
+                            <p class="text-[10px] text-green-700 uppercase font-bold">{% trans "Best Price" %}</p>
+                            <p class="font-mono text-lg text-green-700 font-bold">₹{{ price.modal_price }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">{% trans "Max" %}</p>
+                            <p class="font-mono text-sm text-blue-600 font-bold">₹{{ price.max_price }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p class="text-sm text-amber-800 flex items-center gap-2">
+                    <i data-lucide="info" class="h-4 w-4 flex-shrink-0"></i>
+                    <span>{% trans "Prices are per Quintal. Compare with your selling price before recording the
+                        harvest." %}</span>
+                </p>
+            </div>
+            {% else %}
+            <div class="text-center py-6">
+                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="search-x" class="h-6 w-6 text-gray-400"></i>
+                </div>
+                <p class="text-gray-500 font-semibold">{% trans "No market data found for this crop." %}</p>
+                <p class="text-sm text-gray-400 mt-1">{% trans "Try using a common crop name (e.g. Wheat, Rice,
+                    Cotton)." %}</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

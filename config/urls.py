@@ -19,5 +19,10 @@ urlpatterns = [
     path('add-expense/', views.expense_add, name='add_expense'),
     path('harvest/<int:cycle_id>/', views.crop_harvest, name='harvest_crop'),
     path('generate-report/', views.generate_pdf, name='generate_pdf'),
+    
+    # API Endpoints (AJAX)
+    path('api/mandi-prices/', views.api_mandi_prices, name='api_mandi_prices'),
+    path('api/crop-forecast/', views.api_crop_forecast, name='api_crop_forecast'),
+    
     path('', include('pwa.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

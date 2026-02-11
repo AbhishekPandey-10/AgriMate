@@ -3,15 +3,16 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.db.models import Sum
 from xhtml2pdf import pisa
 from io import BytesIO
 from .models import CropCycle, Expense, FarmerProfile, Yield, SchemeRecommendation
 from .forms import CropForm, ExpenseForm, YieldForm
 from .gemini_service import fetch_schemes_smartly
+from .market_service import fetch_mandi_prices, get_crop_forecast
 
 def signup(request):
     if request.method == 'POST':
@@ -19,8 +20,14 @@ def signup(request):
         name = request.POST.get('name')
         password = request.POST.get('password')
         land_area = request.POST.get('land_area', '0')
-        # language = request.POST.get('language') # Not used yet
-        # otp = request.POST.get('otp') # Not used yet
+        state = request.POST.get('state', '')
+        district = request.POST.get('district', '')
+        category = request.POST.get('category', 'GENERAL')
+        has_kcc = request.POST.get('has_kcc') == 'true'
+        language = request.POST.get('language', 'en')
+        # Only keep supported languages
+        if language not in ('en', 'hi', 'pa'):
+            language = 'en'
 
         if User.objects.filter(username=phone).exists():
             messages.error(request, "Phone number already registered.")
@@ -30,11 +37,24 @@ def signup(request):
             # Create User
             user = User.objects.create_user(username=phone, password=password, first_name=name)
             
-            # Create Farmer Profile with provided land area
-            FarmerProfile.objects.create(user=user, total_land_area=float(land_area))
+            # Create Farmer Profile with all details
+            FarmerProfile.objects.create(
+                user=user,
+                total_land_area=float(land_area),
+                state=state,
+                district=district,
+                category=category,
+                has_kcc=has_kcc,
+                language=language,
+            )
             
             # Login
             login(request, user)
+            
+            # Activate user's language
+            translation.activate(language)
+            request.session['django_language'] = language
+            
             messages.success(request, f"Welcome, {name}!")
             return redirect('dashboard')
         except Exception as e:
@@ -52,6 +72,10 @@ def dashboard(request):
     except:
         return render(request, 'core/error.html', {'message': 'No Farmer Profile Found. Please contact Admin.'})
     
+    # Activate user's preferred language
+    lang = farmer.language or 'en'
+    translation.activate(lang)
+    request.session['django_language'] = lang
     # Get Data
     active_crops = CropCycle.objects.filter(farmer=farmer, status='ACTIVE')
     recent_expenses = Expense.objects.filter(cycle__farmer=farmer).order_by('-date')[:5]
@@ -129,10 +153,11 @@ def expense_add(request):
         form = ExpenseForm(request.user)
     return render(request, 'core/expense_form.html', {'form': form, 'title': 'Log Expense'})
 
-# 4. Harvest Logic (Close Cycle)
+# 4. Harvest Logic (Close Cycle) — with Mandi Price Integration
 @login_required
 def crop_harvest(request, cycle_id):
     cycle = get_object_or_404(CropCycle, id=cycle_id, farmer__user=request.user)
+    farmer = cycle.farmer
     
     if request.method == 'POST':
         form = YieldForm(request.POST, request.FILES)
@@ -150,7 +175,17 @@ def crop_harvest(request, cycle_id):
             return redirect('dashboard')
     else:
         form = YieldForm()
-    return render(request, 'core/harvest_form.html', {'form': form, 'title': f'Harvest {cycle.crop_name}'})
+    
+    # Fetch mandi prices for this crop
+    mandi_data = fetch_mandi_prices(cycle.crop_name, farmer.district, farmer.state)
+    
+    context = {
+        'form': form,
+        'title': f'Harvest {cycle.crop_name}',
+        'cycle': cycle,
+        'mandi_data': mandi_data,
+    }
+    return render(request, 'core/harvest_form.html', context)
 
 # 5. Generate PDF Bank Report
 @login_required
@@ -211,3 +246,43 @@ def generate_pdf(request):
     response['Content-Disposition'] = f'attachment; filename="credit_report_{farmer.farmer_code}.pdf"'
     
     return response
+
+# ============================================================
+# 6. API ENDPOINTS (for AJAX calls from templates)
+# ============================================================
+
+@login_required
+def api_mandi_prices(request):
+    """API: Returns mandi prices for a crop as JSON."""
+    crop = request.GET.get('crop', '')
+    if not crop:
+        return JsonResponse({'error': 'crop parameter required'}, status=400)
+    
+    try:
+        farmer = request.user.farmerprofile
+        district = farmer.district
+        state = farmer.state
+    except:
+        district = ''
+        state = ''
+    
+    data = fetch_mandi_prices(crop, district, state)
+    return JsonResponse(data)
+
+
+@login_required
+def api_crop_forecast(request):
+    """API: Returns profitability forecast for a crop as JSON."""
+    crop = request.GET.get('crop', '')
+    area = request.GET.get('area', '1')
+    
+    if not crop:
+        return JsonResponse({'error': 'crop parameter required'}, status=400)
+    
+    try:
+        area = float(area)
+    except ValueError:
+        area = 1.0
+    
+    data = get_crop_forecast(crop, area)
+    return JsonResponse(data)

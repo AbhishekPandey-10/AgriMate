@@ -103,6 +103,50 @@
                         <p class="text-xs text-gray-500">Enter your total farmland in acres</p>
                     </div>
 
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium leading-none">State</label>
+                            <div class="relative">
+                                <i data-lucide="map-pin" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                                <input type="text" name="state" placeholder="e.g. Uttar Pradesh"
+                                    class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium leading-none">District</label>
+                            <div class="relative">
+                                <i data-lucide="map" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                                <input type="text" name="district" placeholder="e.g. Lucknow"
+                                    class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium leading-none">Category</label>
+                            <div class="relative">
+                                <i data-lucide="users" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                                <select name="category"
+                                    class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                                    <option value="GENERAL">General</option>
+                                    <option value="SC">Scheduled Caste</option>
+                                    <option value="ST">Scheduled Tribe</option>
+                                    <option value="OBC">Other Backward Class</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium leading-none">Kisan Credit Card</label>
+                            <label
+                                class="flex items-center gap-3 h-12 px-3 rounded-md border border-gray-300 cursor-pointer hover:bg-green-50 transition-colors">
+                                <input type="checkbox" name="has_kcc" value="true"
+                                    class="h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500">
+                                <span class="text-sm text-gray-700">I have KCC</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="space-y-2">
                         <label class="text-sm font-medium leading-none">Language</label>
                         <div class="relative">
@@ -110,9 +154,8 @@
                             <select name="language"
                                 class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
                                 <option value="en">English</option>
-                                <option value="hi">Hindi</option>
-                                <option value="mr">Marathi</option>
-                                <option value="pa">Punjabi</option>
+                                <option value="hi">हिन्दी (Hindi)</option>
+                                <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
                             </select>
                         </div>
                     </div>

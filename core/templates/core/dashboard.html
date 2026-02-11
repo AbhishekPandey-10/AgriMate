@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
 {% block content %}
 <nav class="sticky top-0 z-50 bg-green-900 text-white shadow-lg">
@@ -12,7 +13,7 @@
             <button type="submit"
                 class="flex items-center gap-2 text-sm hover:bg-green-800 px-3 py-1.5 rounded-md transition text-green-100">
                 <i data-lucide="log-out" class="h-4 w-4"></i>
-                <span class="hidden sm:inline">Logout</span>
+                <span class="hidden sm:inline">{% trans "Logout" %}</span>
             </button>
         </form>
     </div>
@@ -26,24 +27,26 @@
         <div class="relative z-10 p-6 sm:p-8">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <p class="text-green-200 text-xs font-bold uppercase tracking-wider mb-1">Farmer Profile</p>
+                    <p class="text-green-200 text-xs font-bold uppercase tracking-wider mb-1">{% trans "Farmer Profile"
+                        %}</p>
                     <h2 class="text-3xl font-bold leading-tight">
                         {{ farmer.user.first_name|default:farmer.user.username }}
                     </h2>
                     <div class="flex flex-wrap gap-x-6 mt-3 text-sm text-green-100/90">
                         <span class="flex items-center gap-1.5">
-                            <i data-lucide="id-card" class="w-4 h-4"></i> ID: {{ farmer.farmer_code }}
+                            <i data-lucide="id-card" class="w-4 h-4"></i> {% trans "ID" %}: {{ farmer.farmer_code }}
                         </span>
                         <span class="flex items-center gap-1.5 text-white text-base">
                             <i data-lucide="map" class="w-4 h-4 text-yellow-400"></i>
-                            Free Land: <strong class="text-yellow-400">{{ free_land }} Acres</strong>
+                            {% trans "Free Land" %}: <strong class="text-yellow-400">{{ free_land }} {% trans "Acres"
+                                %}</strong>
                         </span>
                     </div>
                 </div>
                 <div class="hidden sm:block">
                     <span
                         class="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg text-sm text-green-50">
-                        Status: <strong>Active</strong>
+                        {% trans "Status" %}: <strong>{% trans "Active" %}</strong>
                     </span>
                 </div>
             </div>
@@ -58,8 +61,9 @@
                 class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-2 group-hover:bg-green-600 group-hover:text-white transition-colors text-green-700">
                 <i data-lucide="sprout" class="w-6 h-6"></i>
             </div>
-            <span class="font-bold text-gray-900 text-sm group-hover:text-green-700 transition-colors">New Crop</span>
-            <span class="text-xs text-gray-400">Start Season</span>
+            <span class="font-bold text-gray-900 text-sm group-hover:text-green-700 transition-colors">{% trans "New
+                Crop" %}</span>
+            <span class="text-xs text-gray-400">{% trans "Start Season" %}</span>
         </a>
 
         <a href="{% url 'add_expense' %}"
@@ -68,8 +72,9 @@
                 class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-2 group-hover:bg-red-600 group-hover:text-white transition-colors text-red-700">
                 <i data-lucide="receipt" class="w-6 h-6"></i>
             </div>
-            <span class="font-bold text-gray-900 text-sm group-hover:text-red-700 transition-colors">Expense</span>
-            <span class="text-xs text-gray-400">Log Cost</span>
+            <span class="font-bold text-gray-900 text-sm group-hover:text-red-700 transition-colors">{% trans "Expense"
+                %}</span>
+            <span class="text-xs text-gray-400">{% trans "Log Cost" %}</span>
         </a>
 
         <a href="#active-crops"
@@ -78,8 +83,9 @@
                 class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-2 group-hover:bg-yellow-600 group-hover:text-white transition-colors text-yellow-700">
                 <i data-lucide="coins" class="w-6 h-6"></i>
             </div>
-            <span class="font-bold text-gray-900 text-sm group-hover:text-yellow-700 transition-colors">Harvest</span>
-            <span class="text-xs text-gray-400">Sell Crop</span>
+            <span class="font-bold text-gray-900 text-sm group-hover:text-yellow-700 transition-colors">{% trans
+                "Harvest" %}</span>
+            <span class="text-xs text-gray-400">{% trans "Sell Crop" %}</span>
         </a>
 
         <a href="{% url 'generate_pdf' %}"
@@ -88,8 +94,9 @@
                 class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-600 group-hover:text-white transition-colors text-blue-700">
                 <i data-lucide="file-check" class="w-6 h-6"></i>
             </div>
-            <span class="font-bold text-gray-900 text-sm group-hover:text-blue-700 transition-colors">Report</span>
-            <span class="text-xs text-gray-400">For Bank</span>
+            <span class="font-bold text-gray-900 text-sm group-hover:text-blue-700 transition-colors">{% trans "Report"
+                %}</span>
+            <span class="text-xs text-gray-400">{% trans "For Bank" %}</span>
         </a>
     </div>
 
@@ -99,7 +106,7 @@
         <!-- Active Crops Section -->
         <div class="lg:col-span-3 space-y-4">
             <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <i data-lucide="wheat" class="h-5 w-5 text-green-600"></i> Active Crops
+                <i data-lucide="wheat" class="h-5 w-5 text-green-600"></i> {% trans "Active Crops" %}
             </h3>
 
             {% if active_crops %}
@@ -111,16 +118,18 @@
                     <div class="flex items-start justify-between mb-3">
                         <div>
                             <h4 class="font-bold text-gray-900 text-lg">{{ crop.crop_name }}</h4>
-                            <p class="text-sm text-gray-600 font-medium mt-0.5">{{ crop.area_used }} acres</p>
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wide mt-1">Started: {{
+                            <p class="text-sm text-gray-600 font-medium mt-0.5">{{ crop.area_used }} {% trans "acres" %}
+                            </p>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wide mt-1">{% trans "Started" %}: {{
                                 crop.start_date }}</p>
                         </div>
                         <span
-                            class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded-full uppercase">Active</span>
+                            class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded-full uppercase">{%
+                            trans "Active" %}</span>
                     </div>
                     <a href="{% url 'harvest_crop' crop.id %}"
                         class="w-full mt-3 inline-flex justify-center items-center gap-1.5 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors">
-                        <i data-lucide="trending-up" class="h-4 w-4"></i> Harvest & Sell
+                        <i data-lucide="trending-up" class="h-4 w-4"></i> {% trans "Harvest & Sell" %}
                     </a>
                 </div>
                 {% endfor %}
@@ -130,11 +139,11 @@
                 <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
                     <i data-lucide="sprout" class="h-8 w-8 text-gray-300"></i>
                 </div>
-                <p class="text-gray-600 font-semibold">No active crops.</p>
-                <p class="text-sm text-gray-400 mb-4 mt-1">Your land is ready for a new season.</p>
+                <p class="text-gray-600 font-semibold">{% trans "No active crops." %}</p>
+                <p class="text-sm text-gray-400 mb-4 mt-1">{% trans "Your land is ready for a new season." %}</p>
                 <a href="{% url 'add_crop' %}"
                     class="inline-flex items-center gap-2 text-green-700 font-bold text-sm hover:underline">
-                    Start a season <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    {% trans "Start a season" %} <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
             {% endif %}
@@ -143,7 +152,7 @@
         <!-- Recent Expenses Section -->
         <div class="lg:col-span-2 space-y-4">
             <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <i data-lucide="receipt" class="h-5 w-5 text-red-600"></i> Recent Expenses
+                <i data-lucide="receipt" class="h-5 w-5 text-red-600"></i> {% trans "Recent Expenses" %}
             </h3>
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-50 overflow-hidden">
                 {% if expenses %}
@@ -164,7 +173,7 @@
                 {% endfor %}
                 {% else %}
                 <div class="p-8 text-center">
-                    <p class="text-gray-400 text-sm">No expenses recorded yet.</p>
+                    <p class="text-gray-400 text-sm">{% trans "No expenses recorded yet." %}</p>
                 </div>
                 {% endif %}
             </div>
@@ -175,7 +184,7 @@
     <!-- Government Scheme Recommendations Section -->
     <div class="space-y-4">
         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <i data-lucide="lightbulb" class="h-5 w-5 text-indigo-600"></i> Recommended Government Schemes
+            <i data-lucide="lightbulb" class="h-5 w-5 text-indigo-600"></i> {% trans "Recommended Government Schemes" %}
         </h3>
 
         {% if recommended_schemes %}
@@ -192,26 +201,28 @@
                                 <i data-lucide="award" class="h-5 w-5 text-indigo-600"></i>
                                 {{ scheme.scheme_name }}
                             </h4>
-                            <p class="text-xs text-gray-400 mt-1">Added: {{ scheme.created_at|date:"M d, Y" }}</p>
+                            <p class="text-xs text-gray-400 mt-1">{% trans "Added" %}: {{ scheme.created_at|date:"M d,
+                                Y" }}</p>
                         </div>
                         <span
-                            class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-1 rounded-full uppercase">New</span>
+                            class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-1 rounded-full uppercase">{%
+                            trans "New" %}</span>
                     </div>
 
                     <div class="space-y-2">
                         <div>
-                            <p class="text-sm font-semibold text-gray-700 mb-1">📋 Description</p>
+                            <p class="text-sm font-semibold text-gray-700 mb-1">📋 {% trans "Description" %}</p>
                             <p class="text-sm text-gray-600">{{ scheme.description|truncatewords:30 }}</p>
                         </div>
 
                         <div>
-                            <p class="text-sm font-semibold text-gray-700 mb-1">✨ Benefits</p>
+                            <p class="text-sm font-semibold text-gray-700 mb-1">✨ {% trans "Benefits" %}</p>
                             <p class="text-sm text-gray-600">{{ scheme.benefits|truncatewords:20 }}</p>
                         </div>
 
                         {% if scheme.eligibility_criteria %}
                         <div>
-                            <p class="text-sm font-semibold text-gray-700 mb-1">✅ Eligibility</p>
+                            <p class="text-sm font-semibold text-gray-700 mb-1">✅ {% trans "Eligibility" %}</p>
                             <p class="text-sm text-gray-600">{{ scheme.eligibility_criteria|truncatewords:20 }}</p>
                         </div>
                         {% endif %}
@@ -220,14 +231,12 @@
                     {% if scheme.link %}
                     <a href="{{ scheme.link }}" target="_blank"
                         class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
-                        <i data-lucide="external-link" class="h-4 w-4"></i>
-                        Apply Now
+                        <i data-lucide="external-link" class="h-4 w-4"></i> {% trans "Apply Now" %}
                     </a>
                     {% else %}
                     <div
                         class="inline-flex items-center gap-2 bg-gray-100 text-gray-500 px-4 py-2 rounded-lg text-sm font-medium">
-                        <i data-lucide="info" class="h-4 w-4"></i>
-                        Contact Local Office
+                        <i data-lucide="info" class="h-4 w-4"></i> {% trans "Contact Local Office" %}
                     </div>
                     {% endif %}
                 </div>
@@ -239,12 +248,12 @@
             <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-3">
                 <i data-lucide="lightbulb" class="h-8 w-8 text-indigo-300"></i>
             </div>
-            <p class="text-gray-600 font-semibold">No scheme recommendations yet.</p>
-            <p class="text-sm text-gray-400 mb-4 mt-1">Add a new crop to get AI-powered government scheme suggestions.
-            </p>
+            <p class="text-gray-600 font-semibold">{% trans "No scheme recommendations yet." %}</p>
+            <p class="text-sm text-gray-400 mb-4 mt-1">{% trans "Add a new crop to get AI-powered government scheme
+                suggestions." %}</p>
             <a href="{% url 'add_crop' %}"
                 class="inline-flex items-center gap-2 text-indigo-700 font-bold text-sm hover:underline">
-                Start a season <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                {% trans "Start a season" %} <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
         </div>
         {% endif %}
@@ -254,39 +263,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // 1. Check if we are online and have data to sync
         if (navigator.onLine) {
             let outbox = JSON.parse(localStorage.getItem('expense_outbox') || '[]');
-
             if (outbox.length > 0) {
                 console.log("Found offline data. Syncing...", outbox);
-
-                // 2. Send each item to the server
-                // Note: In a real production app, we'd send these in one batch. 
-                // For this hackathon, we loop and send one by one.
                 outbox.forEach(item => {
                     fetch("{% url 'add_expense' %}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-CSRFToken': '{{ csrf_token }}' // Django needs this
+                            'X-CSRFToken': '{{ csrf_token }}'
                         },
                         body: new URLSearchParams(item)
                     })
                         .then(response => {
-                            if (response.ok) {
-                                console.log("Synced item:", item.item_name);
-                            }
+                            if (response.ok) { console.log("Synced item:", item.item_name); }
                         })
                         .catch(err => console.error("Sync failed:", err));
                 });
-
-                // 3. Clear the outbox
                 localStorage.removeItem('expense_outbox');
-
-                // 4. Notify user and reload to show new data
                 alert('✅ Back Online! ' + outbox.length + ' offline expenses have been synced.');
-                setTimeout(() => location.reload(), 1000); // Reload page to see the new data
+                setTimeout(() => location.reload(), 1000);
             }
         }
     });
