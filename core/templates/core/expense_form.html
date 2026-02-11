@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-red-50 to-orange-50 border-b border-gray-100 px-6 py-4">
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <i data-lucide="receipt" class="h-6 w-6 text-red-600"></i>
+                {{ title }}
+            </h2>
+        </div>
+
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="flex gap-3 mt-6">
+                    <button type="submit"
+                        class="flex-1 inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                        <i data-lucide="save" class="h-4 w-4"></i> Save Expense
+                    </button>
+                    <a href="{% url 'dashboard' %}"
+                        class="inline-flex items-center justify-center gap-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function (e) {
+        // 1. Check if we are offline
+        if (!navigator.onLine) {
+            e.preventDefault(); // Stop the form from trying to send to the server
+
+            // 2. Capture the data
+            const formData = new FormData(form);
+            const expenseData = {};
+            formData.forEach((value, key) => {
+                // We only need the fields, not the CSRF token
+                if (key !== 'csrfmiddlewaretoken') {
+                    expenseData[key] = value;
+                }
+            });
+
+            // 3. Add a timestamp (optional but good for debugging)
+            expenseData['temp_id'] = Date.now();
+
+            // 4. Save to LocalStorage (The "Outbox")
+            // Get existing outbox or create empty list
+            let outbox = JSON.parse(localStorage.getItem('expense_outbox') || '[]');
+            outbox.push(expenseData);
+            localStorage.setItem('expense_outbox', JSON.stringify(outbox));
+
+            // 5. User Feedback
+            alert('⚠️ You are OFFLINE. \n\nExpense saved to your device. It will sync automatically when you visit the Dashboard online.');
+
+            // 6. Redirect manually to dashboard (simulate success)
+            window.location.href = "{% url 'dashboard' %}";
+        }
+    });
+</script>
+{% endblock %}

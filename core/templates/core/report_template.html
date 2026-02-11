@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Credit Report - {{ farmer.user.first_name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+            color: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            background: #f0fdf4;
+            border-left: 4px solid #166534;
+            padding: 12px 15px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #166534;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            font-size: 13px;
+            color: #374151;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .credit-score {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .credit-score-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #166534;
+            margin-bottom: 10px;
+        }
+
+        .credit-score-label {
+            font-size: 16px;
+            color: #92400e;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .text-green {
+            color: #166534;
+        }
+
+        .text-red {
+            color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Bank Credit Report</h1>
+            <p>Generated on {{ report_date }} | Agri-Ledger Platform</p>
+        </div>
+
+        <!-- Farmer Profile -->
+        <div class="section">
+            <div class="section-title">Farmer Profile</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Full Name</div>
+                    <div class="info-value">{{ farmer.user.first_name|default:farmer.user.username }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Farmer ID</div>
+                    <div class="info-value">{{ farmer.farmer_code }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Total Land</div>
+                    <div class="info-value">{{ farmer.total_land_area }} Acres</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value">{{ farmer.created_at|date:"d M Y" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credit Score -->
+        <div class="section">
+            <div class="credit-score">
+                <div class="credit-score-value">{{ credit_score }}/100</div>
+                <div class="credit-score-label">Credit Score</div>
+            </div>
+        </div>
+
+        <!-- Crop History -->
+        <div class="section">
+            <div class="section-title">Crop History (Last 12 Months)</div>
+            {% if crops %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Crop Name</th>
+                        <th>Area (Acres)</th>
+                        <th>Start Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for crop in crops %}
+                    <tr>
+                        <td>{{ crop.crop_name }}</td>
+                        <td>{{ crop.area_used }}</td>
+                        <td>{{ crop.start_date|date:"d M Y" }}</td>
+                        <td><span class="status-badge">{{ crop.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color: #6b7280; text-align: center; padding: 20px;">No crop history available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="section">
+            <div class="section-title">Financial Summary</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Total Income</div>
+                    <div class="info-value text-green">₹{{ total_income|floatformat:2 }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Total Expenses</div>
+                    <div class="info-value text-red">₹{{ total_expenses|floatformat:2 }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Net Profit</div>
+                    <div class="info-value text-green">₹{{ net_profit|floatformat:2 }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Active Crops</div>
+                    <div class="info-value">{{ active_crop_count }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Expenses -->
+        <div class="section">
+            <div class="section-title">Recent Expenses (Last 10)</div>
+            {% if expenses %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.item_name }}</td>
+                        <td>{{ expense.date|date:"d M Y" }}</td>
+                        <td class="text-red">₹{{ expense.cost|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color: #6b7280; text-align: center; padding: 20px;">No expenses recorded.</p>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Agri-Ledger</strong> | This is a computer-generated report and does not require a signature.</p>
+            <p>Report ID: {{ farmer.farmer_code }}-{{ report_date|date:"YmdHis" }}</p>
+        </div>
+    </div>
+</body>
+
+</html>

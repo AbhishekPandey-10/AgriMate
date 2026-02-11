@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-b border-gray-100 px-6 py-4">
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <i data-lucide="coins" class="h-6 w-6 text-yellow-600"></i>
+                {{ title }}
+            </h2>
+        </div>
+
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="flex gap-3 mt-6">
+                    <button type="submit"
+                        class="flex-1 inline-flex items-center justify-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                        <i data-lucide="check-circle" class="h-4 w-4"></i> Record Harvest
+                    </button>
+                    <a href="{% url 'dashboard' %}"
+                        class="inline-flex items-center justify-center gap-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

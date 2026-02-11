@@ -1,0 +1,48 @@
+{% load pwa %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Ledger</title>
+
+    {% progressive_web_app_meta %}
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#166534', // Green-800
+                        secondary: '#ca8a04', // Yellow-600
+                        background: '#f0fdf4', // Green-50
+                        surface: '#ffffff',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-background min-h-screen font-sans text-gray-900">
+
+    {% if messages %}
+    <div class="fixed top-4 right-4 z-50 space-y-2">
+        {% for message in messages %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col lg:flex-row">
+    <div class="relative lg:w-1/2 h-64 lg:h-auto overflow-hidden bg-green-900">
+        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop"
+            alt="Farm Field" class="absolute inset-0 w-full h-full object-cover opacity-60">
+
+        <div class="relative z-10 flex flex-col justify-end h-full p-10 text-white">
+            <div class="flex items-center gap-2 mb-4">
+                <i data-lucide="leaf" class="w-8 h-8"></i>
+                <span class="text-3xl font-bold tracking-tight">Agri-Ledger</span>
+            </div>
+            <p class="text-green-100 max-w-md">
+                Track your crops, expenses, and harvests — generate your credit report in seconds.
+            </p>
+        </div>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center p-8 bg-white">
+        <div class="w-full max-w-sm space-y-8">
+
+            <!-- Toggle Header -->
+            <div class="flex space-x-4 border-b border-gray-200">
+                <button onclick="toggleAuth('login')" id="tab-login"
+                    class="pb-2 text-sm font-medium border-b-2 border-green-600 text-green-600 transition-colors">
+                    Login
+                </button>
+                <button onclick="toggleAuth('signup')" id="tab-signup"
+                    class="pb-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">
+                    Sign Up
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="form-login" class="space-y-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Welcome Back</h1>
+                    <p class="mt-2 text-gray-500 text-sm">Sign in to your account</p>
+                </div>
+                <form method="post" action="{% url 'login' %}" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none" for="username">Phone Number</label>
+                        <div class="relative">
+                            <i data-lucide="phone" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="text" name="username" required placeholder="9998887777"
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none" for="password">Password</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="password" name="password" required
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-green-700 text-white hover:bg-green-800 h-10 w-full">
+                        Sign In
+                    </button>
+                </form>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="form-signup" class="hidden space-y-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">New Farmer?</h1>
+                    <p class="mt-2 text-gray-500 text-sm">Create your account in seconds</p>
+                </div>
+                <form method="post" action="{% url 'signup' %}" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none">Full Name</label>
+                        <div class="relative">
+                            <i data-lucide="user" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="text" name="name" required placeholder="Ram Kumar"
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none">Phone Number</label>
+                        <div class="relative">
+                            <i data-lucide="phone" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="text" name="phone" required placeholder="9998887777"
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none">Total Land Area (Acres)</label>
+                        <div class="relative">
+                            <i data-lucide="map" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="number" name="land_area" step="0.01" min="0" placeholder="10.5" required
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                        <p class="text-xs text-gray-500">Enter your total farmland in acres</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none">Language</label>
+                        <div class="relative">
+                            <i data-lucide="languages" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <select name="language"
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                                <option value="en">English</option>
+                                <option value="hi">Hindi</option>
+                                <option value="mr">Marathi</option>
+                                <option value="pa">Punjabi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none">OTP (Verification)</label>
+                        <div class="relative">
+                            <i data-lucide="key-round" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="text" name="otp" placeholder="1234"
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                        <p class="text-xs text-green-600 cursor-pointer hover:underline text-right">Send OTP</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium leading-none">Set Password</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                            <input type="password" name="password" required
+                                class="flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-1 pl-10 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-600">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-green-700 text-white hover:bg-green-800 h-10 w-full">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAuth(mode) {
+        const loginForm = document.getElementById('form-login');
+        const signupForm = document.getElementById('form-signup');
+        const loginTab = document.getElementById('tab-login');
+        const signupTab = document.getElementById('tab-signup');
+
+        if (mode === 'login') {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+
+            loginTab.classList.add('text-green-600', 'border-green-600');
+            loginTab.classList.remove('text-gray-500', 'border-transparent');
+
+            signupTab.classList.add('text-gray-500', 'border-transparent');
+            signupTab.classList.remove('text-green-600', 'border-green-600');
+        } else {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+
+            signupTab.classList.add('text-green-600', 'border-green-600');
+            signupTab.classList.remove('text-gray-500', 'border-transparent');
+
+            loginTab.classList.add('text-gray-500', 'border-transparent');
+            loginTab.classList.remove('text-green-600', 'border-green-600');
+        }
+    }
+</script>
+{% endblock %}
