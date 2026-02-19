@@ -286,3 +286,25 @@ def api_crop_forecast(request):
     
     data = get_crop_forecast(crop, area)
     return JsonResponse(data)
+
+
+@login_required
+def switch_language(request):
+    """View to handle language switching from dashboard"""
+    if request.method == 'POST':
+        lang = request.POST.get('language')
+        from django.conf import settings
+        if lang and lang in dict(settings.LANGUAGES).keys():
+            # 1. Activate currency language
+            translation.activate(lang)
+            # 2. Set session key (critical for Django 5+)
+            request.session['django_language'] = lang
+            # 3. Persist to profile
+            try:
+                farmer = request.user.farmerprofile
+                farmer.language = lang
+                farmer.save()
+            except:
+                pass
+    
+    return redirect(request.META.get('HTTP_REFERER', 'dashboard'))

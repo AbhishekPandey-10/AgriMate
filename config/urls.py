@@ -19,6 +19,7 @@ urlpatterns = [
     path('add-expense/', views.expense_add, name='add_expense'),
     path('harvest/<int:cycle_id>/', views.crop_harvest, name='harvest_crop'),
     path('generate-report/', views.generate_pdf, name='generate_pdf'),
+    path('switch-language/', views.switch_language, name='switch_language'),
     
     # API Endpoints (AJAX)
     path('api/mandi-prices/', views.api_mandi_prices, name='api_mandi_prices'),
